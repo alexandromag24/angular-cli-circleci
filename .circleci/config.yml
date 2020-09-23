@@ -26,14 +26,6 @@ jobs:
           path: test-results.xml
           prefix: tests
       - run:
-          name: angular-lint
-          command: yarn lint -- --formatters-dir ./tslint-formatters --format junit -o tslint.xml
-          
-      - store_artifacts:
-          path: tslint.xml
-          prefix: lint
-          
-      - run:
            name: Deploy Master to Heroku
            command: |
              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
@@ -45,10 +37,19 @@ jobs:
                - build
                - deploy:
                    requires:
-                     - build # only run deploy-via-git job if the build job has completed
+                     - build 
                    filters:
                      branches:
-                       only: master # only run deploy-via-git job on master branch
+                       only: master 
+      - run:
+          name: angular-lint
+          command: yarn lint -- --formatters-dir ./tslint-formatters --format junit -o tslint.xml
+          
+      - store_artifacts:
+          path: tslint.xml
+          prefix: lint
+          
+      
 
 
 
